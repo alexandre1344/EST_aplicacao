@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fogo e Lenha - Sistema de Gestão</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Login Form -->
+        <div id="loginForm" class="card">
+            <h2>Login</h2>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="usuario">Usuário:</label>
+                    <input type="text" id="usuario" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Entrar</button>
+            </form>
+        </div>
+
+        <!-- Main Content -->
+        <div id="mainContent" style="display: none;">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2>Bem-vindo, <span id="usuarioNome"></span></h2>
+                    <button onclick="logout()" class="btn btn-danger">Sair</button>
+                </div>
+            </div>
+
+            <!-- Nova Anotação -->
+            <div class="card">
+                <h3>Nova Anotação</h3>
+                <form onsubmit="handleNovaAnotacao(event)">
+                    <div class="form-group">
+                        <label for="anotacao">Placa:</label>
+                        <input type="text" id="anotacao" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                </form>
+            </div>
+
+            <!-- Lista de Anotações -->
+            <div class="card">
+                <h3>Anotações</h3>
+                <div id="listaAnotacoes"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html> 
