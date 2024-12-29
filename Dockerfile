@@ -1,5 +1,5 @@
 # Usar uma imagem base Python oficial
-FROM python:3.12-slim
+FROM python:3.11
 
 # Definir diretório de trabalho
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Instalar dependências
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 # Copiar o resto do código
 COPY . .
@@ -22,4 +22,5 @@ ENV PYTHONUNBUFFERED=1
 ENV PATH="/usr/local/bin:${PATH}"
 
 # Usar caminho completo do Python
-CMD ["/usr/local/bin/python", "app.py"] 
+ENTRYPOINT ["/usr/local/bin/python3"]
+CMD ["app.py"]
