@@ -9,11 +9,3 @@ run:
   command: python app.py
   network:
     port: 8080
-    protocol: tcp
-  health_check:
-    path: /health
-    protocol: tcp
-    interval: 10
-    timeout: 5
-    healthy_threshold: 3
-    unhealthy_threshold: 3 
