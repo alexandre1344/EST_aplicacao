@@ -1,11 +1,20 @@
 version: 1.0
-runtime: python311
+runtime: python3
 build:
   commands:
     build:
-      - pip3 install -r requirements.txt
+      - pip install -r requirements.txt
 run:
-  runtime-version: 3.11
-  command: python app.py
+  runtime-version: 3.12
+  command: /usr/local/bin/python app.py
   network:
     port: 8080
+  env:
+    - name: MONGODB_URI
+      value: ${MONGODB_URI}
+    - name: DB_NAME
+      value: ${DB_NAME}
+    - name: SECRET_KEY
+      value: ${SECRET_KEY}
+    - name: PATH
+      value: /usr/local/bin:/usr/bin:/bin 
