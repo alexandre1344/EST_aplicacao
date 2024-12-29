@@ -1,13 +1,27 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fogo e Lenha - Sistema de Gestão</title>
+    <title>Sistema de Estacionamento</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <!-- Menu Superior -->
+    <div class="top-menu" id="topMenu" style="display: none;">
+        <div class="menu-content">
+            <div class="user-info">
+                <span class="user-name" id="menuUserName"></span>
+                <span class="user-role" id="menuUserRole"></span>
+            </div>
+            <div class="menu-actions">
+                <button id="themeToggle" class="btn-theme" onclick="toggleTheme()">🌙</button>
+                <button onclick="logout()" class="btn btn-danger">Sair</button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <!-- Login Form -->
         <div id="loginForm" class="card">
@@ -25,31 +39,94 @@
             </form>
         </div>
 
-        <!-- Main Content -->
-        <div id="mainContent" style="display: none;">
+        <!-- Painel Admin -->
+        <div id="adminPanel" style="display: none;">
             <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h2>Bem-vindo, <span id="usuarioNome"></span></h2>
-                    <button onclick="logout()" class="btn btn-danger">Sair</button>
+                <h2>Gerenciamento de Usuários</h2>
+                <button onclick="showAddUserForm()" class="btn btn-primary">Novo Usuário</button>
+                
+                <!-- Formulário de Adicionar Usuário -->
+                <div id="addUserForm" style="display: none;" class="form-container">
+                    <h3>Adicionar Novo Usuário</h3>
+                    <form onsubmit="handleAddUser(event)">
+                        <div class="form-group">
+                            <label for="newUsername">Usuário:</label>
+                            <input type="text" id="newUsername" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">Senha:</label>
+                            <input type="password" id="newPassword" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newNome">Nome:</label>
+                            <input type="text" id="newNome" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newNivelAcesso">Nível de Acesso:</label>
+                            <select id="newNivelAcesso" class="form-control" required>
+                                <option value="usuario">Usuário</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                        <div class="button-group">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                            <button type="button" onclick="hideAddUserForm()" class="btn btn-danger">Cancelar</button>
+                        </div>
+                    </form>
                 </div>
+                
+                <div id="usersList"></div>
             </div>
 
-            <!-- Nova Anotação -->
             <div class="card">
-                <h3>Nova Anotação</h3>
-                <form onsubmit="handleNovaAnotacao(event)">
-                    <div class="form-group">
-                        <label for="anotacao">Placa:</label>
-                        <input type="text" id="anotacao" class="form-control" required>
+                <h2>Relatórios</h2>
+                <div class="card-content">
+                    <div class="report-controls">
+                        <div class="form-group">
+                            <label for="reportType">Período do Relatório:</label>
+                            <div class="input-group">
+                                <select id="reportType" class="form-control" onchange="updateReportOptions()">
+                                    <option value="hoje">Hoje</option>
+                                    <option value="ontem">Ontem</option>
+                                    <option value="semana">Última Semana</option>
+                                    <option value="mes">Último Mês</option>
+                                    <option value="personalizado">Data Específica</option>
+                                </select>
+                                <button onclick="gerarRelatorio()" class="btn btn-primary">Gerar Relatório</button>
+                            </div>
+                        </div>
+                        <div id="customDateContainer" class="form-group" style="display: none;">
+                            <label for="reportDate">Data Específica:</label>
+                            <input type="date" id="reportDate" class="form-control">
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interface Usuário -->
+        <div id="userPanel" style="display: none;">
+            <div class="card">
+                <h2>Registro de Veículos</h2>
+                <form onsubmit="handleAddPlaca(event)" class="form-inline">
+                    <div class="form-group">
+                        <input type="text" id="newPlaca" placeholder="Digite a placa" class="form-control" required>
+                        <button type="submit" class="btn btn-primary">Registrar</button>
+                    </div>
                 </form>
             </div>
 
-            <!-- Lista de Anotações -->
             <div class="card">
-                <h3>Anotações</h3>
-                <div id="listaAnotacoes"></div>
+                <h2>Pesquisar Veículo</h2>
+                <div class="search-box">
+                    <input type="text" id="searchPlate" placeholder="Digite a placa" class="form-control">
+                    <button onclick="searchPlate()" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Veículos Ativos</h2>
+                <div id="listaPlacas"></div>
             </div>
         </div>
     </div>
