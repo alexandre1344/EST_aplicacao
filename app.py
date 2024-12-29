@@ -21,18 +21,28 @@ def get_database():
     client = MongoClient(MONGODB_URI)
     return client[os.getenv('DB_NAME', 'estacionamento')]
 
-# Verificação de saúde para AWS App Runner
+# Verificação de saúde mais robusta
 @app.route('/health')
 def health_check():
     try:
         # Tenta conectar ao MongoDB
         db = get_database()
         db.command('ping')
-        return jsonify({"status": "healthy", "message": "Application is running"}), 200
+        return jsonify({
+            "status": "healthy",
+            "timestamp": datetime.now().isoformat(),
+            "message": "Application is running"
+        }), 200
     except Exception as e:
-        return jsonify({"status": "unhealthy", "message": str(e)}), 500
+        app.logger.error(f"Health check failed: {str(e)}")
+        return jsonify({
+            "status": "unhealthy",
+            "timestamp": datetime.now().isoformat(),
+            "message": str(e)
+        }), 500
 
 # Configuração para produção
 if __name__ == '__main__':
+    # Usar a porta da variável de ambiente
     port = int(os.getenv('PORT', 8080))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug=False)

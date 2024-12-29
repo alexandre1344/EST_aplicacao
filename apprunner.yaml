@@ -6,15 +6,14 @@ build:
       - pip3 install -r requirements.txt
 run:
   runtime-version: 3.11
-  command: /usr/local/bin/python app.py
+  command: python app.py
   network:
     port: 8080
-  env:
-    - name: MONGODB_URI
-      value: ${MONGODB_URI}
-    - name: DB_NAME
-      value: ${DB_NAME}
-    - name: SECRET_KEY
-      value: ${SECRET_KEY}
-    - name: PATH
-      value: /usr/local/bin:/usr/bin:/bin 
+    protocol: tcp
+  health_check:
+    path: /health
+    protocol: tcp
+    interval: 10
+    timeout: 5
+    healthy_threshold: 3
+    unhealthy_threshold: 3 
