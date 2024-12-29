@@ -1,34 +1,24 @@
-# Use uma imagem base do Python
+# Usar uma imagem base Python oficial
 FROM python:3.9-slim
 
-# Instale as dependências do sistema necessárias para o Qt
-RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
-    libxkbcommon-x11-0 \
-    libdbus-1-3 \
-    libxcb-icccm4 \
-    libxcb-image0 \
-    libxcb-keysyms1 \
-    libxcb-randr0 \
-    libxcb-render-util0 \
-    libxcb-shape0 \
-    libxcb-xinerama0 \
-    libxcb-xfixes0 \
-    x11-utils \
-    && rm -rf /var/lib/apt/lists/*
-
-# Configure o diretório de trabalho
+# Definir diretório de trabalho
 WORKDIR /app
 
-# Copie os requisitos e instale as dependências
+# Copiar os arquivos de requisitos primeiro
 COPY requirements.txt .
+
+# Instalar dependências
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copie o código da aplicação
+# Copiar o resto do código
 COPY . .
 
-# Exponha a porta que a aplicação vai usar
+# Porta padrão do App Runner
 EXPOSE 8080
 
-# Comando para iniciar a aplicação
+# Variáveis de ambiente serão definidas no App Runner
+ENV PORT=8080
+ENV PYTHONUNBUFFERED=1
+
+# Comando para executar a aplicação
 CMD ["python", "app.py"] 
